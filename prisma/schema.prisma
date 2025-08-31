@@ -1,0 +1,33 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Word {
+  id              Int      @id @default(autoincrement())
+  term            String
+  normalizedTerm  String
+  list            WordList
+  severity        Int
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Log {
+  id        Int      @id @default(autoincrement())
+  text      String
+  usedLLM   Boolean  @default(false)
+  contains  Boolean
+  severity  Int
+  hits      Json
+  createdAt DateTime @default(now())
+}
+
+enum WordList {
+  BLACK
+  WHITE
+}
