@@ -11,8 +11,16 @@ class ModerationService {
     return apiService.post<ModerationResult>(this.endpoint, { text, useLLM });
   }
 
-  async getLogs(): Promise<LogEntry[]> {
-    return apiService.get<LogEntry[]>("/logs");
+  async getLogs(showOriginal: boolean = false): Promise<LogEntry[]> {
+    return apiService.get<LogEntry[]>("/logs", {
+      params: { censored: !showOriginal },
+    });
+  }
+
+  async getLogById(id: number, showOriginal: boolean = false): Promise<LogEntry> {
+    return apiService.get<LogEntry>(`/logs/${id}`, {
+      params: { censored: !showOriginal },
+    });
   }
 
   async censorText(text: string, useLLM: boolean = false): Promise<string> {
