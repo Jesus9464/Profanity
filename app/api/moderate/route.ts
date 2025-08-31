@@ -18,14 +18,12 @@ export async function POST(req: NextRequest) {
   const ntext = normalize(text);
   let hits: Hit[] = [];
 
-  // reglas locales
   for (const w of blacklist) {
     if (ntext.includes(w.normalizedTerm) && !whitelist.has(w.normalizedTerm)) {
       hits.push({ term: w.term, severity: w.severity, source: "rules" });
     }
   }
 
-  // Ollama (si aplica)
   if (useLLM) {
     const llmHits = await checkWithLLM(text);
     const mappedHits: Hit[] = llmHits.map(
@@ -48,15 +46,19 @@ export async function POST(req: NextRequest) {
   const severity = hits.reduce((m, h) => Math.max(m, h.severity ?? 0), 0);
   const containsProfanity = hits.length > 0;
 
-  await prisma.log.create({
-    data: {
-      text,
-      usedLLM: useLLM,
-      contains: containsProfanity,
-      severity,
-      hits: JSON.parse(JSON.stringify(hits)),
-    },
-  });
+  try {
+    await prisma.log.create({
+      data: {
+        text,
+        usedLLM: useLLM,
+        contains: containsProfanity,
+        severity,
+        hits: JSON.parse(JSON.stringify(hits)),
+      },
+    });
+  } catch (error) {
+    console.error("Failed to log to database:", error);
+  }
 
   return NextResponse.json({
     containsProfanity,
