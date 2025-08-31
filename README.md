@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Profanity Detection Service
 
-## Getting Started
+This project is a web service for detecting and censoring inappropriate content in texts. It uses a local database to store banned words and can optionally use a language model (Ollama) for advanced detection.
 
-First, run the development server:
+## Prerequisites
+
+Before starting, make sure you have installed:
+
+- **Node.js**: Version 18.x or higher
+  - [Download Node.js](https://nodejs.org/)
+- **Ollama** (optional, for advanced AI detection)
+  - [Download Ollama](https://ollama.ai/)
+  - Recommended models: llama3 or mistral
+
+## Installation
+
+1. **Clone the repository**
+
+```bash
+git clone <repository-url>
+cd profanity-service
+```
+
+2. **Install dependencies**
+
+```bash
+npm install
+```
+
+3. **Set up the database**
+
+```bash
+npm run prisma:migrate
+```
+
+This will create the local SQLite database (`prisma/dev.db`) and apply the necessary migrations.
+
+## Running the Project
+
+### Option 1: Running without Ollama
+
+If you only want to use keyword-based detection (without AI):
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Option 2: Running with Ollama (recommended)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+To use all features including advanced AI detection:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Make sure you have Ollama installed and at least one model downloaded**
 
-## Learn More
+```bash
+ollama pull llama3
+# or
+ollama pull mistral
+```
 
-To learn more about Next.js, take a look at the following resources:
+2. **Run the project with Ollama**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run dev:local
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+This command will start both the Ollama server and the Next.js application in parallel.
 
-## Deploy on Vercel
+## Accessing the Application
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Once started, open [http://localhost:3000](http://localhost:3000) in your browser to access the main interface.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Main Features
+
+- **Banned Words Management**: Add, edit, and remove words from the profanity dictionary.
+- **Text Validation**: Check if a text contains inappropriate words or phrases.
+- **Automatic Censoring**: Option to automatically censor inappropriate content.
+- **Activity Log**: View a history of all validations performed.
+- **Advanced Detection**: Use AI models to detect subtle or contextual content (requires Ollama).
+
+## Additional Tools
+
+- **Prisma Studio**: For visually managing the database
+
+```bash
+npm run prisma:studio
+```
+
+This will open a web interface at [http://localhost:5555](http://localhost:5555) where you can view and modify data directly.
