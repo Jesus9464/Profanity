@@ -8,7 +8,6 @@ const prisma = new PrismaClient();
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const censored = searchParams.get("censored") !== "false";
-  // por defecto true, si ?censored=false → devuelve original
 
   const logs = await prisma.log.findMany({
     orderBy: { createdAt: "desc" },
