@@ -13,6 +13,7 @@ export default function LogsPage() {
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [filterLLM, setFilterLLM] = useState<string>("all");
   const [filterProfanity, setFilterProfanity] = useState<string>("all");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   useEffect(() => {
     const fetchLogs = async () => {
@@ -30,28 +31,34 @@ export default function LogsPage() {
     fetchLogs();
   }, [showOriginal]);
 
-  const filteredLogs = logs.filter((log) => {
-    const matchesSearch = log.text
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    const matchesDate = selectedDate
-      ? new Date(log.createdAt).toLocaleDateString() ===
-        new Date(selectedDate).toLocaleDateString()
-      : true;
-    const matchesLLM =
-      filterLLM === "all"
-        ? true
-        : filterLLM === "yes"
-        ? log.usedLLM
-        : !log.usedLLM;
-    const matchesProfanity =
-      filterProfanity === "all"
-        ? true
-        : filterProfanity === "yes"
-        ? log.contains
-        : !log.contains;
-    return matchesSearch && matchesDate && matchesLLM && matchesProfanity;
-  });
+  const filteredLogs = logs
+    .filter((log) => {
+      const matchesSearch = log.text
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+      const matchesDate = selectedDate
+        ? new Date(log.createdAt).toLocaleDateString() ===
+          new Date(selectedDate).toLocaleDateString()
+        : true;
+      const matchesLLM =
+        filterLLM === "all"
+          ? true
+          : filterLLM === "yes"
+          ? log.usedLLM
+          : !log.usedLLM;
+      const matchesProfanity =
+        filterProfanity === "all"
+          ? true
+          : filterProfanity === "yes"
+          ? log.contains
+          : !log.contains;
+      return matchesSearch && matchesDate && matchesLLM && matchesProfanity;
+    })
+    .sort((a, b) => {
+      const dateA = new Date(a.createdAt).getTime();
+      const dateB = new Date(b.createdAt).getTime();
+      return sortOrder === "asc" ? dateA - dateB : dateB - dateA;
+    });
 
   const uniqueDates = [
     ...new Set(logs.map((log) => new Date(log.createdAt).toLocaleDateString())),
@@ -273,6 +280,31 @@ export default function LogsPage() {
             >
               {showOriginal ? "Show Original" : "Show Censored"}
             </button>
+            
+            <button
+              onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
+              className="px-3 py-1.5 text-sm rounded-md border border-border bg-background text-foreground hover:bg-muted/10 flex items-center gap-1.5"
+              title={sortOrder === "asc" ? "Ordenar descendente" : "Ordenar ascendente"}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className={`transition-transform ${sortOrder === "asc" ? "" : "rotate-180"}`}
+              >
+                <path d="m3 8 4-4 4 4"/>
+                <path d="M7 4v16"/>
+                <path d="m21 16-4 4-4-4"/>
+                <path d="M17 20V4"/>
+              </svg>
+              <span>{sortOrder === "asc" ? "Más antiguos primero" : "Más recientes primero"}</span>
+            </button>
           </div>
         </div>
 
@@ -280,8 +312,10 @@ export default function LogsPage() {
         <div className="rounded-lg border border-border overflow-hidden">
           <div className="bg-muted px-4 py-2.5 border-b border-border flex justify-between items-center">
             <h3 className="text-sm font-medium">System Logs</h3>
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <span>{filteredLogs.length} entries</span>
+              <span className="text-muted-foreground/50">•</span>
+              <span>{sortOrder === "asc" ? "Ordenados: antiguos → recientes" : "Ordenados: recientes → antiguos"}</span>
             </div>
           </div>
           <div>
