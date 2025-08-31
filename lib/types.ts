@@ -13,3 +13,10 @@ export type HitCensor = {
   severity: number;
   source: "rules" | "llm" | string;
 };
+
+export interface OllamaHit {
+  term?: string;
+  start?: number;
+  end?: number;
+  severity?: number;
+}

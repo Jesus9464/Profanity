@@ -36,9 +36,9 @@ export async function POST(req: NextRequest) {
         severity: number;
       }) => ({
         term: h.term,
-        start: h.start,
-        end: h.end,
-        severity: h.severity,
+        start: h.start || undefined,
+        end: h.end || undefined,
+        severity: h.severity || 1,
         source: "llm",
       })
     );
@@ -61,7 +61,13 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({
     containsProfanity,
     severity,
-    hits,
+    hits: hits.map((hit) => ({
+      term: hit.term,
+      start: hit.start,
+      end: hit.end,
+      severity: hit.severity,
+      ...(hit.source && { source: hit.source }),
+    })),
     usedLLM: useLLM,
   });
 }
