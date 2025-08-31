@@ -3,7 +3,7 @@ import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 class ApiService {
   private api: AxiosInstance;
 
-  constructor(baseURL: string = "http://localhost:3000/api") {
+  constructor(baseURL: string = "/api") {
     this.api = axios.create({
       baseURL,
       headers: {
