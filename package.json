@@ -10,7 +10,7 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
     "ollama": "ollama serve",
-    "dev:local": "concurrently \"npm run ollama\" \"npm run dev\""
+    "dev:local": "npm run ollama && npm run dev"
   },
   "dependencies": {
     "@prisma/client": "^6.15.0",

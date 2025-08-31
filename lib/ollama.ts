@@ -2,32 +2,41 @@ import { OllamaHit } from "./types";
 
 export async function checkWithLLM(text: string) {
   try {
-    const resp = await fetch("http://localhost:11434/api/generate", {
+    const resp = await fetch("http://127.0.0.1:11434/api/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         model: "mistral",
+        format: "json",
         prompt: `
-Analiza el siguiente texto y detecta si contiene groserías o lenguaje ofensivo.
-Responde SOLO en JSON válido con esta forma:
+You are a profanity detector for both English and Spanish. Analyze the following text and detect any offensive words, profanity, insults, or vulgar language.
+
+Return ONLY a JSON with the following format:
 
 {
   "hits": [
-    { "term": "palabra", "start": 10, "end": 15, "severity": 2 }
+    { "term": "word", "start": 10, "end": 15, "severity": 2 }
   ]
 }
 
-Si no hay groserías, responde:
+Where:
+- term: the offensive word or phrase found
+- start: starting position in the text (0-based)
+- end: ending position in the text
+- severity: severity level (1: mild, 2: medium, 3: high)
+
+IMPORTANT: Detect offensive words in both English and Spanish.
+
+If there are no profanities:
 { "hits": [] }
 
-Texto:
+Text:
 ${text}
-        `,
+    `,
       }),
     });
 
     const data = await resp.text();
-    console.log("Raw Ollama response:", data);
 
     try {
       const lines = data.split("\n").filter((line) => line.trim());
@@ -44,22 +53,18 @@ ${text}
         } catch {}
       }
 
-      console.log("Reconstructed response content:", responseContent);
       const jsonStart = responseContent.indexOf("{");
       const jsonEnd = responseContent.lastIndexOf("}");
 
       if (jsonStart === -1 || jsonEnd === -1) {
-        console.error("No valid JSON found in response");
         return [];
       }
 
       const jsonStr = responseContent.slice(jsonStart, jsonEnd + 1);
-      console.log("Extracted JSON:", jsonStr);
 
       const parsed = JSON.parse(jsonStr);
 
       if (!parsed.hits || !Array.isArray(parsed.hits)) {
-        console.log("No hits array found in response");
         return [];
       }
 
