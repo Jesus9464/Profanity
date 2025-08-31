@@ -39,6 +39,14 @@ export default function Home() {
       <div className="container mx-auto px-6 py-10 max-w-7xl">
         <Header />
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+          <WordManagement
+            words={words}
+            setWords={setWords}
+            newWord={newWord}
+            setNewWord={setNewWord}
+            editingWord={editingWord}
+            setEditingWord={setEditingWord}
+          />
           <TextValidation
             text={text}
             setText={setText}
@@ -48,14 +56,6 @@ export default function Home() {
             setResult={setResult}
             loading={loading}
             setLoading={setLoading}
-          />
-          <WordManagement
-            words={words}
-            setWords={setWords}
-            newWord={newWord}
-            setNewWord={setNewWord}
-            editingWord={editingWord}
-            setEditingWord={setEditingWord}
           />
         </div>
       </div>
