@@ -7,13 +7,13 @@ const prisma = new PrismaClient();
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   const { searchParams } = new URL(req.url);
   const censored = searchParams.get("censored") !== "false";
 
   const log = await prisma.log.findUnique({
-    where: { id: Number(params.id) },
+    where: { id: Number(context.params.id) },
   });
 
   if (!log) {
