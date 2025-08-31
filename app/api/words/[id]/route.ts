@@ -4,12 +4,11 @@ import { normalize } from "@/lib/normalize";
 
 const prisma = new PrismaClient();
 
-// PUT /api/words/:id -> actualizar palabra
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  const { id } = await params;
   const { term, list, severity } = await req.json();
 
   const updated = await prisma.word.update({
@@ -24,12 +23,11 @@ export async function PUT(
   return NextResponse.json(updated);
 }
 
-// DELETE /api/words/:id -> eliminar palabra
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  const { id } = await params;
 
   await prisma.word.delete({
     where: { id: Number(id) },
