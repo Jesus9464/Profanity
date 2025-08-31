@@ -81,7 +81,7 @@ ${text}
       return [];
     }
   } catch (err) {
-    console.error("Error llamando a Ollama:", err);
+    console.error("Error calling Ollama:", err);
     return [];
   }
 }

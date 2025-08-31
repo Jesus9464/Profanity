@@ -1,6 +1,6 @@
 # Profanity Detection Service
 
-This project is a web service for detecting and censoring inappropriate content in texts. It uses a local database to store banned words and can optionally use a language model (Ollama) for advanced detection.
+This project is a web service for detecting and censoring inappropriate content in texts. It uses a local database to store banned words and can optionally use a language model (Ollama) for advanced detection in both English and Spanish.
 
 ## Prerequisites
 
@@ -9,15 +9,18 @@ Before starting, make sure you have installed:
 - **Node.js**: Version 18.x or higher
   - [Download Node.js](https://nodejs.org/)
 - **Ollama** (optional, for advanced AI detection)
+  - **IMPORTANT**: Ollama must be installed separately, it is not included in the project dependencies
   - [Download Ollama](https://ollama.ai/)
-  - Recommended models: llama3 or mistral
+  - Recommended model: mistral
+
+All other dependencies, including **Concurrently** (for running multiple processes), are included in the project's package.json and will be installed with `npm install`
 
 ## Installation
 
 1. **Clone the repository**
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/Jesus9464/Profanity.git
 cd profanity-service
 ```
 
@@ -49,11 +52,9 @@ npm run dev
 
 To use all features including advanced AI detection:
 
-1. **Make sure you have Ollama installed and at least one model downloaded**
+1. **Make sure you have Ollama installed and the mistral model downloaded**
 
 ```bash
-ollama pull llama3
-# or
 ollama pull mistral
 ```
 
@@ -63,7 +64,7 @@ ollama pull mistral
 npm run dev:local
 ```
 
-This command will start both the Ollama server and the Next.js application in parallel.
+This command will start both the Ollama server and the Next.js application in parallel using concurrently.
 
 ## Accessing the Application
 
@@ -72,10 +73,39 @@ Once started, open [http://localhost:3000](http://localhost:3000) in your browse
 ## Main Features
 
 - **Banned Words Management**: Add, edit, and remove words from the profanity dictionary.
-- **Text Validation**: Check if a text contains inappropriate words or phrases.
+- **Text Validation**: Check if a text contains inappropriate words or phrases in both English and Spanish.
 - **Automatic Censoring**: Option to automatically censor inappropriate content.
 - **Activity Log**: View a history of all validations performed.
 - **Advanced Detection**: Use AI models to detect subtle or contextual content (requires Ollama).
+- **Multilingual Support**: Detects profanity in both English and Spanish.
+
+## API Usage
+
+The service provides a REST API for text moderation:
+
+```bash
+POST /api/moderate
+```
+
+Request body:
+```json
+{
+  "text": "Text to check for profanity",
+  "useLLM": true  // Set to false to use only dictionary-based detection
+}
+```
+
+Response:
+```json
+{
+  "containsProfanity": true,
+  "severity": 2,
+  "hits": [
+    { "term": "offensive_word", "start": 10, "end": 15, "severity": 2 }
+  ],
+  "usedLLM": true
+}
+```
 
 ## Additional Tools
 
