@@ -1,8 +1,14 @@
 import { OllamaHit } from "./types";
 
+const isLocal = false;
+
+const API = isLocal
+  ? "http://localhost:11434/api/generate"
+  : "https://d5479602411d.ngrok-free.app/api/generate";
+
 export async function checkWithLLM(text: string) {
   try {
-    const resp = await fetch("http://127.0.0.1:11434/api/generate", {
+    const resp = await fetch(API, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
