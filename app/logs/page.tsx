@@ -19,7 +19,7 @@ export default function LogsPage() {
     const fetchLogs = async () => {
       try {
         setLoading(true);
-        const data = await moderationService.getLogs(!showOriginal);
+        const data = await moderationService.getLogs(showOriginal);
         setLogs(data);
       } catch (error) {
         console.error("Error fetching logs:", error);
@@ -278,13 +278,17 @@ export default function LogsPage() {
                   : "bg-background text-foreground border-border"
               }`}
             >
-              {showOriginal ? "Show Original" : "Show Censored"}
+              {showOriginal ? "Show Censored" : "Show Original"}
             </button>
-            
+
             <button
               onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
               className="px-3 py-1.5 text-sm rounded-md border border-border bg-background text-foreground hover:bg-muted/10 flex items-center gap-1.5"
-              title={sortOrder === "asc" ? "Ordenar descendente" : "Ordenar ascendente"}
+              title={
+                sortOrder === "asc"
+                  ? "Ordenar descendente"
+                  : "Ordenar ascendente"
+              }
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -296,14 +300,20 @@ export default function LogsPage() {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className={`transition-transform ${sortOrder === "asc" ? "" : "rotate-180"}`}
+                className={`transition-transform ${
+                  sortOrder === "asc" ? "" : "rotate-180"
+                }`}
               >
-                <path d="m3 8 4-4 4 4"/>
-                <path d="M7 4v16"/>
-                <path d="m21 16-4 4-4-4"/>
-                <path d="M17 20V4"/>
+                <path d="m3 8 4-4 4 4" />
+                <path d="M7 4v16" />
+                <path d="m21 16-4 4-4-4" />
+                <path d="M17 20V4" />
               </svg>
-              <span>{sortOrder === "asc" ? "Más antiguos primero" : "Más recientes primero"}</span>
+              <span>
+                {sortOrder === "asc"
+                  ? "Más antiguos primero"
+                  : "Más recientes primero"}
+              </span>
             </button>
           </div>
         </div>
@@ -315,7 +325,11 @@ export default function LogsPage() {
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <span>{filteredLogs.length} entries</span>
               <span className="text-muted-foreground/50">•</span>
-              <span>{sortOrder === "asc" ? "Ordenados: antiguos → recientes" : "Ordenados: recientes → antiguos"}</span>
+              <span>
+                {sortOrder === "asc"
+                  ? "Ordenados: antiguos → recientes"
+                  : "Ordenados: recientes → antiguos"}
+              </span>
             </div>
           </div>
           <div>
