@@ -4,7 +4,7 @@ const isLocal = false;
 
 const API = isLocal
   ? "http://localhost:11434/api/generate"
-  : "https://d5479602411d.ngrok-free.app/api/generate";
+  : "https://1b82d81cc3c3.ngrok-free.app/api/generate";
 
 export async function checkWithLLM(text: string) {
   try {
