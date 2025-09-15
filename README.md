@@ -32,11 +32,27 @@ npm install
 
 3. **Set up the database**
 
+### For local development (SQLite)
+
 ```bash
+# Asegúrate de que el archivo prisma/schema.prisma use SQLite
 npm run prisma:migrate
 ```
 
 This will create the local SQLite database (`prisma/dev.db`) and apply the necessary migrations.
+
+### For production (Supabase PostgreSQL)
+
+```bash
+# Ejecuta el script para configurar las variables de entorno
+./setup-env.sh
+
+# Genera el cliente Prisma
+npx prisma generate
+
+# Aplica las migraciones a la base de datos de producción
+npx prisma migrate deploy
+```
 
 ## Running the Project
 
@@ -116,3 +132,38 @@ npm run prisma:studio
 ```
 
 This will open a web interface at [http://localhost:5555](http://localhost:5555) where you can view and modify data directly.
+
+## Deployment to Production
+
+### Setting up Supabase
+
+1. Create a Supabase account and project at [https://supabase.com](https://supabase.com)
+2. Get your database connection strings from the Supabase dashboard
+3. Configure your environment variables:
+
+```bash
+# Run the setup script to create the .env file with Supabase credentials
+./setup-env.sh
+```
+
+### Troubleshooting Production Issues
+
+If you encounter 500 errors in production but the application works fine locally:
+
+1. **Check database connection**: Verify that your Supabase connection strings are correct in the `.env` file
+2. **IP allowlist**: Make sure your deployment server's IP is allowed in Supabase's IP allowlist
+3. **Prisma client**: Ensure you're using a singleton Prisma client instance across your application
+4. **Environment variables**: Confirm that all required environment variables are set in your deployment platform
+5. **Database migrations**: Verify that all migrations have been applied to your production database
+
+```bash
+npx prisma migrate deploy
+```
+
+### Switching Between Development and Production
+
+To switch between SQLite (development) and PostgreSQL (production):
+
+1. Update the `prisma/schema.prisma` file to use the appropriate database provider
+2. Run `npx prisma generate` to update the Prisma client
+3. Apply migrations with `npx prisma migrate dev` (development) or `npx prisma migrate deploy` (production)

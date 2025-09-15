@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
 import { normalize } from "@/lib/normalize";
 import { checkWithLLM } from "@/lib/ollama";
 import { Hit } from "@/lib/types";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/prisma";
 
 export async function POST(req: NextRequest) {
   const { text, useLLM = false } = await req.json();

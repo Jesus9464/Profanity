@@ -1,6 +1,6 @@
 import { OllamaHit } from "./types";
 
-const isLocal = false;
+const isLocal = true;
 
 const API = isLocal
   ? "http://localhost:11434/api/generate"

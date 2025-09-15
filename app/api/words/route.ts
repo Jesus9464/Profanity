@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient, WordList } from "@prisma/client";
+import { WordList } from "@prisma/client";
 import { normalize } from "@/lib/normalize";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/lib/prisma";
 
 // GET /api/words -> lista todas las palabras
 export async function GET() {
