@@ -10,7 +10,8 @@
   "prisma:migrate": "prisma migrate dev",
   "prisma:studio": "prisma studio",
   "ollama": "OLLAMA_HOST=0.0.0.0:11434 ollama serve",
-  "dev:local": "concurrently -n OLLAMA,NEXT -c green,blue \"npm run ollama\" \"npm run dev\""
+  "dev:local": "concurrently -n OLLAMA,NEXT -c green,blue \"npm run ollama\" \"npm run dev\"",
+    "postinstall": "prisma generate"
 },
   "dependencies": {
     "@prisma/client": "^6.15.0",
