@@ -94,6 +94,8 @@ Once started, open [http://localhost:3000](http://localhost:3000) in your browse
 - **Activity Log**: View a history of all validations performed.
 - **Advanced Detection**: Use AI models to detect subtle or contextual content (requires Ollama).
 - **Multilingual Support**: Detects profanity in both English and Spanish.
+- **Obfuscated Text Detection**: Identifies profanity even when obfuscated with special characters, numbers, or letter substitutions (e.g., "fvck", "m0therfukker").
+- **Default Profanity List**: Includes a built-in list of common profanity words that will be detected even if the database is empty.
 
 ## API Usage
 
@@ -132,6 +134,14 @@ npm run prisma:studio
 ```
 
 This will open a web interface at [http://localhost:5555](http://localhost:5555) where you can view and modify data directly.
+
+- **Update Normalized Terms**: If you've enhanced the normalization function and need to update existing words in the database
+
+```bash
+npx ts-node scripts/update-normalized-terms.ts
+```
+
+This script will update all existing words in the database with the latest normalization logic, ensuring that obfuscated text detection works properly with all stored words.
 
 ## Deployment to Production
 
